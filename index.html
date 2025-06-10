@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Condividi la tua posizione</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+    #output {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Condividi la tua posizione GPS</h1>
+  <p>Clicca il bottone qui sotto per autorizzare l'accesso alla tua posizione:</p>
+  <button onclick="getLocation()">📍 Mostra la mia posizione</button>
+  <div id="output"></div>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        document.getElementById("output").innerHTML = "Il tuo browser non supporta la geolocalizzazione.";
+      }
+    }
+
+    function showPosition(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      document.getElementById("output").innerHTML =
+        `<p>✅ Posizione rilevata!</p>
+         <p>🌍 Latitudine: <strong>${lat}</strong><br>🌍 Longitudine: <strong>${lon}</strong></p>`;
+
+      // Invia al tuo server (opzionale)
+      /*
+      fetch("https://TUO-SERVER.COM/salva-posizione", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ latitude: lat, longitude: lon })
+      });
+      */
+    }
+
+    function showError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          document.getElementById("output").innerHTML = "❌ Permesso negato.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          document.getElementById("output").innerHTML = "❌ Posizione non disponibile.";
+          break;
+        case error.TIMEOUT:
+          document.getElementById("output").innerHTML = "❌ Timeout durante il rilevamento.";
+          break;
+        default:
+          document.getElementById("output").innerHTML = "❌ Errore sconosciuto.";
+          break;
+      }
+    }
+  </script>
+</body>
+</html>
